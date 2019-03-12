@@ -1,20 +1,16 @@
-const readline = require('readline-sync')
+const dotenv = require('dotenv')
+dotenv.config()
+
+const robots = {
+  userInput: require('./robots/user-input.js'),
+  text: require('./robots/text')
+}
 
 function start () {
   const content = {}
-  content.searchTerm = askAndReturnSearchTerm()
-  content.prefix = askAndReturnPrefix()
 
-  function askAndReturnSearchTerm () {
-    return readline.question('Digite um termo de pesquisa da Wikipédia: ')
-  }
-
-  function askAndReturnPrefix () {
-    const prefixes = [ 'Quem é', 'O que é', 'A história de' ]
-    const selectedPrefixIndex = readline.keyInSelect(prefixes, 'Escolha uma opção: ')
-    const selectedPrefixText = prefixes[selectedPrefixIndex]
-    return selectedPrefixText
-  }
+  robots.userInput(content)
+  robots.text(content)
 
   console.log('Content: ', content)
 }
