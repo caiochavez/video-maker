@@ -12,6 +12,7 @@
   "dependencies": {
     "algorithmia": "^0.3.10",
     "dotenv": "^6.2.0",
-    "readline-sync": "^1.4.9"
+    "readline-sync": "^1.4.9",
+    "sbd": "^1.0.14"
   }
 }
