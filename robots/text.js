@@ -1,6 +1,13 @@
 const algorithmia = require('algorithmia')
 const sentenceBoundaryDetection = require('sbd')
 
+const NaturalLanguageUnderstandingv1 = require('watson-developer-cloud/natural-language-understanding/v1')
+let nlu = new NaturalLanguageUnderstandingv1({
+  iam_apikey: process.env.API_KEY_WATSON,
+  version: '2018-04-05',
+  url: 'https://gateway.watsonplatform.net/natural-language-understanding/api/'
+})
+
 async function robot (content) {
 
   await fetchContentFromWikipedia(content)
@@ -39,6 +46,21 @@ async function robot (content) {
     const sentences = sentenceBoundaryDetection.sentences(content.sourceContentSanitized)
     sentences.forEach(sentence => {
       content.sentences.push({ text: sentence, keywords: [], images: [] })
+    })
+  }
+
+  async function fetchWatsonAndReturnKeywords (sentence) {
+    return new Promise((resolve, reject) => {
+      nlu.analyze({
+        text: sentence,
+        features: {
+          keywords: {}
+        }
+      }, (error, response) => {
+        if (error) throw error
+        const keywords = response.keywords.map(keyword => keyword.text)
+        resolve(keywords)
+      })
     })
   }
 
